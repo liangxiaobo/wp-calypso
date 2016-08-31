@@ -39,7 +39,8 @@ module.exports = React.createClass( {
 	render: function() {
 		var strings = {
 			startOver: this.translate( 'Start Over' ),
-			contactSupport: this.translate( 'Contact Support' )
+			contactSupport: this.translate( 'Contact Support' ),
+			emptySite: this.translate( 'Empty Site' )
 		};
 
 		return (
@@ -70,6 +71,11 @@ module.exports = React.createClass( {
 						}</p>
 					</ActionPanelBody>
 					<ActionPanelFooter>
+						<Button
+							className="settings-action-panel__support-button is-primary"
+							href={ support.EMPTY_SITE }>
+							{ strings.emptySite }
+						</Button>
 						<Button
 							className="settings-action-panel__support-button"
 							href="/help/contact">
