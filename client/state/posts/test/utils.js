@@ -114,6 +114,72 @@ describe( 'utils', () => {
 				}
 			} );
 		} );
+
+		it( 'should copy tags to terms.post_tag on pages', () => {
+			const original = deepFreeze( {
+				ID: 814,
+				type: 'page',
+				tags: {
+					ribs: {
+						ID: 7,
+						name: 'ribs'
+					}
+				}
+			} );
+			const revised = normalizePostForState( original );
+
+			expect( revised ).to.not.equal( original );
+			expect( revised ).to.eql( {
+				ID: 814,
+				type: 'page',
+				tags: {
+					ribs: {
+						ID: 7,
+						name: 'ribs'
+					}
+				},
+				terms: {
+					post_tag: {
+						ribs: {
+							ID: 7,
+							name: 'ribs'
+						}
+					}
+				}
+			} );
+		} );
+
+		it( 'should not copy tags to terms.post_tag on pages when terms.post_tag exists', () => {
+			const original = deepFreeze( {
+				ID: 814,
+				type: 'page',
+				terms: {
+					post_tag: {}
+				},
+				tags: {
+					ribs: {
+						ID: 7,
+						name: 'ribs'
+					}
+				}
+			} );
+			const revised = normalizePostForState( original );
+
+			expect( revised ).to.not.equal( original );
+			expect( revised ).to.eql( {
+				ID: 814,
+				type: 'page',
+				terms: {
+					post_tag: {}
+				},
+				tags: {
+					ribs: {
+						ID: 7,
+						name: 'ribs'
+					}
+				}
+			} );
+		} );
 	} );
 
 	describe( '#getNormalizedPostsQuery()', () => {

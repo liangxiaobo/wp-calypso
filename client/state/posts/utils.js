@@ -5,6 +5,7 @@ import {
 	isEmpty,
 	isPlainObject,
 	flow,
+	get,
 	map,
 	mapValues,
 	mergeWith,
@@ -166,11 +167,23 @@ export function normalizePostForEditing( post ) {
  * @return {Object}      Normalized post object
  */
 export function normalizePostForState( post ) {
-	return cloneDeepWith( post, ( value, key ) => {
+	const normalizedPost = cloneDeepWith( post, ( value, key ) => {
 		if ( 'meta' === key ) {
 			return null;
 		}
 	} );
+
+	// The API does not return post_tag in the terms object for pages
+	if ( ! isEmpty( normalizedPost.tags ) &&
+			! get( normalizedPost, [ 'terms', 'post_tag' ] ) &&
+			normalizedPost.type === 'page'
+	) {
+		normalizedPost.terms = Object.assign( {}, normalizedPost.terms, {
+			post_tag: normalizedPost.tags
+		} );
+	}
+
+	return normalizedPost;
 }
 
 /**
