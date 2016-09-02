@@ -39,6 +39,7 @@ import AuthorCompactProfile from 'blocks/author-compact-profile/docs/example';
 import RelatedPostCard from 'blocks/reader-related-card/docs/example';
 import SearchPostCard from 'blocks/reader-search-card/docs/example';
 import PlanPrice from 'my-sites/plan-price/docs/example';
+import ReaderAvatar from 'blocks/reader-avatar/docs/example';
 
 export default React.createClass( {
 
@@ -99,6 +100,7 @@ export default React.createClass( {
 					<ReaderFullPostHeader />
 					<AuthorCompactProfile />
 					<PlanPrice />
+					<ReaderAvatar />
 				</Collection>
 			</div>
 		);
