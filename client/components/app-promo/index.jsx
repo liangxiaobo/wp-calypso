@@ -4,7 +4,7 @@
 import React from 'react';
 import Gridicon from 'components/gridicon';
 
-import analytics from 'lib/analytics';
+import { recordsTracksEvent } from 'state/analytics/actions';
 import store from 'store';
 import userUtils from 'lib/user/utils';
 import viewport from 'lib/viewport';
@@ -57,18 +57,18 @@ export default React.createClass( {
 	componentDidMount: function() {
 		// record promo view event
 		if ( this.state.show_promo ) {
-			analytics.tracks.recordEvent( 'calypso_desktop_promo_view', {
+			this.props.dispatch( recordsTracksEvent( 'calypso_desktop_promo_view', {
 				promo_location: this.props.location,
 				promo_code: this.state.promo_item.promo_code,
-			} );
+			} ) );
 		}
 	},
 
 	recordClickEvent: function() {
-		analytics.tracks.recordEvent( 'calypso_desktop_promo_click', {
+		this.props.dispatch( recordsTracksEvent( 'calypso_desktop_promo_click', {
 			promo_location: this.props.location,
 			promo_code: this.state.promo_item.promo_code
-		} );
+		} ) );
 	},
 
 	dismiss: function() {
