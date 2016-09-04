@@ -2,14 +2,15 @@
  * External dependencies
  */
 import React from 'react';
+import { connect } from 'react-redux';
 import Gridicon from 'components/gridicon';
 
-import { recordsTracksEvent } from 'state/analytics/actions';
+import { recordTracksEvent } from 'state/analytics/actions';
 import store from 'store';
 import userUtils from 'lib/user/utils';
 import viewport from 'lib/viewport';
 
-export default React.createClass( {
+const AppPromo = React.createClass( {
 
 	displayName: 'AppPromo',
 
@@ -57,18 +58,18 @@ export default React.createClass( {
 	componentDidMount: function() {
 		// record promo view event
 		if ( this.state.show_promo ) {
-			this.props.dispatch( recordsTracksEvent( 'calypso_desktop_promo_view', {
+			this.props.recordTracksEvent( 'calypso_desktop_promo_view', {
 				promo_location: this.props.location,
 				promo_code: this.state.promo_item.promo_code,
-			} ) );
+			} );
 		}
 	},
 
 	recordClickEvent: function() {
-		this.props.dispatch( recordsTracksEvent( 'calypso_desktop_promo_click', {
+		this.props.recordTracksEvent( 'calypso_desktop_promo_click', {
 			promo_location: this.props.location,
 			promo_code: this.state.promo_item.promo_code
-		} ) );
+		} );
 	},
 
 	dismiss: function() {
@@ -113,3 +114,13 @@ export default React.createClass( {
 		);
 	}
 } );
+
+const mapDispatchToProps = ( dispatch ) => {
+  return {
+    recordTracksEvent: (event, properties) => {
+      dispatch( recordTracksEvent( event, properties ) );
+    }
+  };
+}
+
+export default connect( null, mapDispatchToProps )( AppPromo );
