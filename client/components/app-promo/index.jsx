@@ -9,6 +9,7 @@ import { recordTracksEvent } from 'state/analytics/actions';
 import store from 'store';
 import userUtils from 'lib/user/utils';
 import viewport from 'lib/viewport';
+import { translate } from 'i18n-calypso';
 
 const AppPromo = React.createClass( {
 
@@ -33,10 +34,10 @@ const AppPromo = React.createClass( {
 			show_promo = false;
 		}
 
-		const chromeRE = /\bCrOS\b/;
-		if ( chromeRE.test( navigator.userAgent ) ) {
-			show_promo = false;
-    }
+		// const chromeRE = /\bCrOS\b/;
+		// if ( chromeRE.test( navigator.userAgent ) ) {
+		// 	show_promo = false;
+    // }
 
     // TODO: Remove this before submitting PR
     show_promo = true;
@@ -90,7 +91,7 @@ const AppPromo = React.createClass( {
 				<span tabIndex="0" className="app-promo__dismiss" onClick={ this.dismiss } >
 					<Gridicon icon="cross" size={ 24 } />
 					<span className="app-promo__screen-reader-text">
-						{ this.translate( 'Dismiss' ) }
+						{ translate( 'Dismiss' ) }
 					</span>
 				</span>
 				<a
