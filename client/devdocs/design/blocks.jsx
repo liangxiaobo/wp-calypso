@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import page from 'page';
-import toTitleCase from 'to-title-case';
+import { slugToCamelCase } from './docs-example/util';
 import trim from 'lodash/trim';
 
 /**
@@ -63,7 +63,7 @@ export default React.createClass( {
 				{
 					this.props.component
 					? <HeaderCake onClick={ this.backToComponents } backText="All Blocks">
-						{ toTitleCase( this.props.component ) }
+						{ slugToCamelCase( this.props.component ) }
 					</HeaderCake>
 					: <SearchCard
 						onSearch={ this.onSearch }
@@ -72,7 +72,11 @@ export default React.createClass( {
 						analyticsGroup="Docs">
 					</SearchCard>
 				}
-				<Collection component={ this.props.component } filter={ this.state.filter }>
+				<Collection
+					component={ this.props.component }
+					filter={ this.state.filter }
+					section="blocks"
+				>
 					<AuthorSelector />
 					<CommentButtons />
 					<CreditCardForm />
