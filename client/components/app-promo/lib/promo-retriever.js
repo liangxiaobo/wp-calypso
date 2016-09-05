@@ -3,7 +3,7 @@ import { sample } from 'lodash';
 const promo_options = [
 	{
 		promo_code: 'a0001',
-		message: 'WordPress.com your way  — desktop app now available for Mac, Windows, and Linux.'
+		message: 'WordPress.com your way — desktop app now available for Mac, Windows, and Linux.'
 	},
 	{
 		promo_code: 'a0002',
