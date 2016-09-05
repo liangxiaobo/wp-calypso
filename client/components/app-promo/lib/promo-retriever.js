@@ -1,3 +1,5 @@
+import { sample } from 'lodash';
+
 const promo_options = [
 	{
 		promo_code: 'a0001',
@@ -22,7 +24,7 @@ const promo_options = [
 ];
 
 export const getRandomPromo = ( ) => {
-	return promo_options[ Math.floor( Math.random() * promo_options.length ) ];
+	return sample( promo_options );
 };
 
 export const getPromoLink = ( location, promoCode ) => {
