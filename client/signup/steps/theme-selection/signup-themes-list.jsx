@@ -18,6 +18,7 @@ module.exports = React.createClass( {
 		surveyQuestion: React.PropTypes.string,
 		designType: React.PropTypes.string,
 		handleScreenshotClick: React.PropTypes.func,
+		handleThemeUpload: React.PropTypes.func,
 		showThemeUpload: React.PropTypes.bool
 	},
 
@@ -26,6 +27,7 @@ module.exports = React.createClass( {
 			surveyQuestion: null,
 			designType: null,
 			handleScreenshotClick: noop,
+			handleThemeUpload: noop,
 			showThemeUpload: 'showThemeUpload' === abtest( 'signupThemeUpload' )
 		};
 	},
@@ -62,6 +64,7 @@ module.exports = React.createClass( {
 				getActionLabel={ getActionLabel }
 				themes= { themes }
 				showThemeUpload= { this.props.showThemeUpload }
+				onThemeUpload= { this.props.handleThemeUpload }
 			/>
 		);
 	}

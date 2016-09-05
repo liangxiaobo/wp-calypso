@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React from 'react';
+import classNames from 'classnames';
 
 /**
  * Internal dependencies
@@ -9,6 +10,7 @@ import React from 'react';
 import analytics from 'lib/analytics';
 import SignupActions from 'lib/signup/actions';
 import SignupThemesList from './signup-themes-list';
+import PressableThemeStep from './pressable-theme';
 import StepWrapper from 'signup/step-wrapper';
 import ThemePreview from 'my-sites/themes/theme-preview';
 import Button from 'components/button';
@@ -28,6 +30,7 @@ module.exports = React.createClass( {
 		return {
 			previewTheme: {},
 			isPreviewVisible: false,
+			showPressable: false,
 		};
 	},
 
@@ -79,11 +82,20 @@ module.exports = React.createClass( {
 		}
 	},
 
+	handleThemeUpload() {
+		this.setState( {
+			showPressable: true
+		} );
+
+		this.scrollUp();
+	},
+
 	renderThemesList() {
 		return ( <SignupThemesList
 			surveyQuestion={ this.props.signupDependencies.surveyQuestion }
 			designType={ this.props.signupDependencies.designType }
 			handleScreenshotClick={ this.handleScreenshotClick }
+			handleThemeUpload={ this.handleThemeUpload }
 		/> );
 	},
 
@@ -106,6 +118,14 @@ module.exports = React.createClass( {
 		);
 	},
 
+	handleStoreBackClick() {
+		this.setState( {
+			showPressable: false
+		} );
+
+		this.scrollUp();
+	},
+
 	renderStepContent() {
 		return (
 			<div>
@@ -117,15 +137,36 @@ module.exports = React.createClass( {
 
 	render() {
 		const defaultDependencies = this.props.useHeadstart ? { theme: 'pub/twentysixteen' } : undefined;
+
+		const pressableWrapperClassName = classNames( {
+			'theme-selection__pressable-wrapper': true,
+			'is-hidden': ! this.state.showPressable,
+		} );
+
+		const themesWrapperClassName = classNames( {
+			'theme-selection__themes-wrapper': true,
+			'is-hidden': this.state.showPressable,
+		} );
+
 		return (
-			<StepWrapper
-				fallbackHeaderText={ this.translate( 'Choose a theme.' ) }
-				fallbackSubHeaderText={ this.translate( 'No need to overthink it. You can always switch to a different theme later.' ) }
-				subHeaderText={ this.translate( 'Choose a theme. You can always switch to a different theme later.' ) }
-				stepContent={ this.renderStepContent() }
-				defaultDependencies={ defaultDependencies }
-				headerButton={ this.renderJetpackButton() }
-				{ ...this.props } />
+			<div>
+				<div className={ pressableWrapperClassName } >
+					<PressableThemeStep
+						{ ... this.props }
+						onBackClick={ this.handleStoreBackClick }
+					/>
+				</div>
+				<div className={ themesWrapperClassName } >
+					<StepWrapper
+						fallbackHeaderText={ this.translate( 'Choose a theme.' ) }
+						fallbackSubHeaderText={ this.translate( 'No need to overthink it. You can always switch to a different theme later.' ) }
+						subHeaderText={ this.translate( 'Choose a theme. You can always switch to a different theme later.' ) }
+						stepContent={ this.renderStepContent() }
+						defaultDependencies={ defaultDependencies }
+						headerButton={ this.renderJetpackButton() }
+						{ ...this.props } />
+					</div>
+			</div>
 		);
 	}
 } );
