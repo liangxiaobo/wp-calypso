@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import page from 'page';
-import { slugToCamelCase } from './docs-example/util';
+import { slugToCamelCase } from 'devdocs/docs-example/util';
 import trim from 'lodash/trim';
 
 /**
