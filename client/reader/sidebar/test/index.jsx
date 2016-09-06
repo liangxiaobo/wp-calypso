@@ -30,37 +30,37 @@ describe( 'ReaderSidebar', ( ) => {
 
 	context( 'AppPromo', ( ) => {
 		it( 'should not render if desktop promo is disabled', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserLocaleEnglish: false } );
+			const adjustedProperties = { ...defaultPropsToRender, isDesktopPromoDisabled: true }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
 
 		it( 'should not render if user locale isn\'t english', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserDesktopAppUser: true } );
+			const adjustedProperties = { ...defaultPropsToRender, isUserLocaleEnglish: false }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
 
 		it( 'should not render if the viewport is mobile', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserDesktopAppUser: true } );
+			const adjustedProperties = { ...defaultPropsToRender, isViewportMobile: true }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
 
 		it( 'should not render if it\'s ChromeOS', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserDesktopAppUser: true } );
+			const adjustedProperties = { ...defaultPropsToRender, isChromeOS: true }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
 
 		it( 'should not render if desktop promo isn\'t configured to run', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserDesktopAppUser: true } );
+			const adjustedProperties = { ...defaultPropsToRender, isDesktopPromoConfiguredToRun: false }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
 
 		it( 'should not render if user is a desktop app user', ( ) => {
-			const adjustedProperties = Object.assign( {}, defaultPropsToRender, { isUserDesktopAppUser: true } );
+			const adjustedProperties = { ...defaultPropsToRender, isUserDesktopAppUser: true }
 			const wrapper = shallow( <ReaderSidebar { ...adjustedProperties } /> );
 			expect( wrapper.find( '.reader-sidebar__AppPromo' ) ).to.have.lengthOf( 0 );
 		} );
