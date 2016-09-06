@@ -1,39 +1,82 @@
 /**
  * External dependencies
  */
-import React, { PropTypes } from 'react';
-import identity from 'lodash/identity';
+import React from 'react';
+import page from 'page';
+import analytics from 'lib/analytics';
+import { preventWidows } from 'lib/formatting';
 
 /**
  * Internal dependencies
  */
-import { localize } from 'i18n-calypso';
-import VideoPressUpgradeNudge from 'blocks/upgrade-nudge-expanded';
-import { PLAN_PREMIUM, FEATURE_VIDEO_UPLOADS } from 'lib/plans/constants';
+const EmptyContent = require( 'components/empty-content' ),
+	Button = require( 'components/button' );
 
-export const MediaLibraryListPlanPromo = ( { translate } ) => (
-	<div className="media-library__videopress-nudge-container">
-		<VideoPressUpgradeNudge
-			plan={ PLAN_PREMIUM }
-			title={ translate( 'Upgrade to a Premium Plan and Enable VideoPress' ) }
-			subtitle={ translate( 'By upgrading to a Premium Plan you\'ll enable VideoPress support on your site.' ) }
-			highlightedFeature={ FEATURE_VIDEO_UPLOADS }
-			eventName="calypso_video_uploads_upgrade_nudge_impression"
-			benefits={ [
-				translate( 'Upload videos to your site with an interface designed specifically for WordPress.' ),
-				translate( 'Present videos using a lightweight and responsive player that is ad-free and unbranded.' ),
-				translate( 'See where your videos have been shared as well as stats for individual and overall video plays.' )
-			] }
-		/>
-	</div>
-);
+module.exports = React.createClass( {
+	displayName: 'MediaLibraryListPlanPromo',
 
-MediaLibraryListPlanPromo.propTypes = {
-	translate: PropTypes.func
-};
+	propTypes: {
+		site: React.PropTypes.object,
+		filter: React.PropTypes.string
+	},
 
-MediaLibraryListPlanPromo.defaultProps = {
-	translate: identity
-};
+	getTitle: function() {
+		switch ( this.props.filter ) {
+			case 'videos':
+				return this.translate( 'Upload Videos', { textOnly: true, context: 'Media upload plan needed' } );
+				break;
+			case 'audio':
+				return this.translate( 'Upload Audio', { textOnly: true, context: 'Media upload plan needed' } );
+				break;
+			default:
+				return this.translate( 'Upload Media', { textOnly: true, context: 'Media upload plan needed' } );
+		}
+	},
 
-export default localize( MediaLibraryListPlanPromo );
+	getSummary: function() {
+		switch ( this.props.filter ) {
+			case 'videos':
+				return preventWidows(
+					this.translate(
+						'To upload video files to your site, upgrade your plan.',
+						{ textOnly: true, context: 'Media upgrade promo' }
+				), 2 );
+				break;
+			case 'audio':
+				return preventWidows(
+					this.translate(
+						'To upload audio files to your site, upgrade your plan.',
+						{ textOnly: true, context: 'Media upgrade promo' }
+				), 2 );
+				break;
+			default:
+				return preventWidows(
+					this.translate(
+						'To upload audio and video files to your site, upgrade your plan.',
+						{ textOnly: true, context: 'Media upgrade promo' }
+				), 2 );
+		}
+	},
+
+	viewPlansPage: function() {
+		const { slug = '' } = this.props.site;
+
+		analytics.tracks.recordEvent( 'calypso_media_plans_button_click' );
+
+		page( `/plans/${ slug }` );
+	},
+
+	render: function() {
+		const action = (
+			<Button className="button is-primary" onClick={ this.viewPlansPage }>{ this.translate( 'See Plans' ) }</Button>
+		);
+
+		return (
+			<EmptyContent
+				title={ this.getTitle() }
+				line={ this.getSummary() }
+				action={ action }
+				illustration={ '' } />
+		);
+	}
+} );
