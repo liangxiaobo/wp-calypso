@@ -37,11 +37,11 @@ export function requestRelatedPosts( siteId, postId, scope = SCOPE_ALL ) {
 		};
 
 		if ( scope === SCOPE_SAME ) {
-			query.size_local = 3;
+			query.size_local = 2;
 			query.size_global = 0;
 		} else if ( scope === SCOPE_OTHER ) {
 			query.size_local = 0;
-			query.size_global = 3;
+			query.size_global = 2;
 		}
 
 		return wpcom.undocumented().readSitePostRelated( query ).then(

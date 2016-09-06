@@ -21,11 +21,11 @@ function RelatedPosts( { siteId, postId, posts, title, scope, onPostClick = noop
 		return null;
 	}
 	return (
-		<div className="related-posts-v2">
-			<h1 className="related-posts-v2__heading">{ title }</h1>
-			<ul className="related-posts-v2__list">
+		<div className="reader-related-card-v2__blocks">
+			<h1 className="reader-related-card-v2__heading">{ title }</h1>
+			<ul className="reader-related-card-v2__list">
 				{ posts.map( post_id => {
-					return ( <li key={ post_id } className="related-posts-v2__list-item">
+					return ( <li key={ post_id } className="reader-related-card-v2__list-item">
 							<RelatedPost post={ post_id } onPostClick={ onPostClick } onSiteClick={ onSiteClick } />
 						</li> );
 				} )

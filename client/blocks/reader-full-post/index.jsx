@@ -150,7 +150,7 @@ export class FullPostView extends React.Component {
 							? <DailyPostButton post={ post } tagName="span" />
 							: null
 						}
-						{ showRelatedPosts && <RelatedPostsFromSameSite siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More from %s', { args: [ siteName ] } ) } /> }
+						{ showRelatedPosts && <RelatedPostsFromSameSite siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More in %s', { args: [ siteName ] } ) } /> }
 
 						{ shouldShowComments( post )
 							? <Comments ref={ this.bindComments }
@@ -161,7 +161,7 @@ export class FullPostView extends React.Component {
 							: null
 						}
 
-						{ showRelatedPosts && <RelatedPostsFromOtherSites siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More from WordPress.com' ) } /> }
+						{ showRelatedPosts && <RelatedPostsFromOtherSites siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More in WordPress.com' ) } /> }
 					</div>
 				</div>
 			</ReaderMain>
