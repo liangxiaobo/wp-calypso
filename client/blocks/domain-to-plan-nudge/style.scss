@@ -68,6 +68,10 @@
 	color: $gray;
 	white-space: nowrap;
 }
+.domain-to-plan-nudge__credit-card-info-link,
+.domain-to-plan-nudge__credit-card-info-link:visited {
+	color: $gray;
+}
 
 .domain-to-plan-nudge__discount-value {
 	font-size: 12px;

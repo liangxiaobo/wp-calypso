@@ -299,7 +299,15 @@ class DomainToPlanNudge extends Component {
 							}
 						</Button>
 						<div className="domain-to-plan-nudge__credit-card-info">
-							{ translate( 'Using credit card ****%s', { args: storedCard ? storedCard.card : 'xxxx' } ) }
+							<a
+								className="domain-to-plan-nudge__credit-card-info-link"
+								href={ `/checkout/${ siteId }/personal` }>
+								{
+									translate( 'Using credit card ****%s', {
+										args: storedCard ? storedCard.card : 'xxxx'
+									} )
+								}
+							</a>
 						</div>
 					</div>
 				</div>
