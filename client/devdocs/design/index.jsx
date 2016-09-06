@@ -61,7 +61,6 @@ import Collection from 'devdocs/design/search-collection';
 import fetchComponentsUsageStats from 'state/components-usage-stats/actions';
 import FAQ from 'components/faq/docs/example';
 import VerticalMenu from 'components/vertical-menu/docs/example';
-import EditButton from 'components/edit-button/docs/example';
 
 let DesignAssets = React.createClass( {
 	displayName: 'DesignAssets',
@@ -113,7 +112,6 @@ let DesignAssets = React.createClass( {
 					<CountedTextareas />
 					<DatePicker />
 					<DropZones searchKeywords="drag" />
-					<EditButton />
 					<EllipsisMenu />
 					<ExternalLink />
 					<FAQ />
