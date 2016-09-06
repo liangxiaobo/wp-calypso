@@ -38,7 +38,8 @@ import { getPlanRawPrice } from 'state/plans/selectors';
 import {
 	getPlanDiscountedRawPrice,
 	getPlanRawDiscount,
-	getPlansBySiteId
+	getPlansBySiteId,
+	isPlanDiscounted
 } from 'state/sites/plans/selectors';
 import QuerySitePlans from 'components/data/query-site-plans';
 import formatCurrency from 'lib/format-currency';
@@ -96,7 +97,12 @@ class DomainToPlanNudge extends Component {
 	}
 
 	handleTransactionComplete( error, data ) {
-		const { siteId, translate, userCurrency } = this.props;
+		const {
+			discountedRawPrice,
+			siteId,
+			translate,
+			userCurrency
+		} = this.props;
 
 		debug( 'transaction complete', error, data );
 		// see transaction-steps-mixin for matching checkout analytics
@@ -120,8 +126,8 @@ class DomainToPlanNudge extends Component {
 		const receiptId = data.receipt_id;
 
 		// ad tracking
-		const product = { ...this.getCartItem(), currency: userCurrency, cost: 35.88, volume: 1 }; //TODO: pass through price
-		const cart = { products: [ product ], total_cost: 35.88, currency: userCurrency };
+		const product = { ...this.getCartItem(), currency: userCurrency, cost: discountedRawPrice, volume: 1 };
+		const cart = { products: [ product ], total_cost: discountedRawPrice, currency: userCurrency };
 		recordPurchase( product, receiptId );
 		recordOrderInAtlas( cart, receiptId );
 		recordOrderInCriteo( cart, receiptId );
@@ -132,7 +138,7 @@ class DomainToPlanNudge extends Component {
 			coupon_code: '',
 			currency: userCurrency,
 			payment_method: storedCardPayment().paymentMethod,
-			total_cost: 35.88 //TODO: pass through discounted plan price here
+			total_cost: discountedRawPrice
 		} );
 
 		this.props.recordTracksEvent( 'calypso_checkout_product_purchase', this.getCartItem() );
@@ -177,6 +183,7 @@ class DomainToPlanNudge extends Component {
 
 		const {
 			discountedRawPrice,
+			isDiscounted,
 			productSlug,
 			rawDiscount,
 			rawPrice,
@@ -249,15 +256,25 @@ class DomainToPlanNudge extends Component {
 				</div>
 				<div className="domain-to-plan-nudge__actions-group">
 					<div className="domain-to-plan-nudge__plan-price-group">
-						<div className="domain-to-plan-nudge__discount-value">
-							{ formatCurrency( rawDiscount, userCurrency ) }
-						</div>
-
-						<PlanPrice
-							rawPrice={ rawPrice }
-							currencyCode={ userCurrency }
-							original
-						/>
+						{
+							isDiscounted && <div
+								className="domain-to-plan-nudge__discount-value">
+								{
+									translate( 'SAVE %(discount)s', {
+										args: {
+											discount: formatCurrency( rawDiscount, userCurrency )
+										}
+									} )
+								}
+							</div>
+						}
+						{
+							isDiscounted && <PlanPrice
+								rawPrice={ rawPrice }
+								currencyCode={ userCurrency }
+								original
+							/>
+						}
 						<PlanPrice
 							rawPrice={ discountedRawPrice }
 							currencyCode={ userCurrency }
@@ -308,6 +325,7 @@ export default connect(
 			),
 			storedCard: get( getStoredCards( state ), '0' ),
 			site: getSite( state, siteId ),
+			isDiscounted: isPlanDiscounted( state, siteId, productSlug ),
 			userCurrency: getCurrentUserCurrencyCode( state ), //populated by either plans endpoint
 			rawPrice: getPlanRawPrice( state, productId ),
 			discountedRawPrice: getPlanDiscountedRawPrice( state, siteId, productSlug ),
