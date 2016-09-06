@@ -89,8 +89,8 @@ class DomainToPlanNudge extends Component {
 		} = this.props;
 
 		return {
-			productId,
-			productSlug,
+			product_id: productId,
+			product_slug: productSlug,
 			free_trial: false,
 			is_domain_registration: false
 		};
