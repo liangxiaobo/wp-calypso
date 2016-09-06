@@ -38,7 +38,7 @@ import userSettings from 'lib/user-settings';
 import AppPromo from 'components/app-promo';
 import { setNextLayoutFocus } from 'state/ui/layout-focus/actions';
 import userUtils from 'lib/user/utils';
-import { isChromeOS } from 'lib/user-agent-utils';
+import * as userAgentUtils from 'lib/user-agent-utils';
 import viewport from 'lib/viewport';
 import { localize } from 'i18n-calypso';
 
@@ -135,26 +135,6 @@ const ReaderSidebar = React.createClass( {
 				}
 			}
 		}
-	},
-
-  shouldRenderAppPromo() {
-    const {
-      isDesktopPromoDisabled,
-      isUserLocaleEnglish,
-      isViewportMobile,
-      isChromeOS,
-      isDesktopPromoConfiguredToRun,
-      isUserDesktopAppUser
-    } = this.props
-
-		return every( [
-			! isDesktopPromoDisabled,
-			isUserLocaleEnglish,
-			! isViewportMobile,
-			! isChromeOS,
-			isDesktopPromoConfiguredToRun,
-			! isUserDesktopAppUser
-		] );
 	},
 
 	render() {
@@ -258,7 +238,7 @@ const ReaderSidebar = React.createClass( {
 
 			</SidebarRegion>
 
-			{ this.shouldRenderAppPromo() &&
+			{ this.props.shouldRenderAppPromo &&
 				<div className="reader-sidebar__AppPromo">
 					<AppPromo location="reader" locale={ userUtils.getLocaleSlug() } />
 				</div>
@@ -274,19 +254,34 @@ ReaderSidebar.defaultProps = {
 	translate: identity
 };
 
-export { ReaderSidebar };
+const shouldRenderAppPromo = ( options = { } ) => {
+	const {
+		isDesktopPromoDisabled = store.get( 'desktop_promo_disabled' ),
+		isViewportMobile = viewport.isMobile(),
+		isUserLocaleEnglish = 'en' === userUtils.getLocaleSlug(),
+		isChromeOS = userAgentUtils.isChromeOS(),
+		isDesktopPromoConfiguredToRun = config.isEnabled( 'desktop-promo' ),
+		isUserDesktopAppUser = userSettings.getSetting( 'is_desktop_app_user' )
+	} = options;
+
+	return every( [
+				 ! isDesktopPromoDisabled,
+				 isUserLocaleEnglish,
+				 ! isViewportMobile,
+				 ! isChromeOS,
+				 isDesktopPromoConfiguredToRun,
+				 ! isUserDesktopAppUser
+	] );
+};
+
+export { ReaderSidebar, shouldRenderAppPromo };
 export default connect(
 	( state ) => {
 		return {
 			isListsOpen: state.ui.reader.sidebar.isListsOpen,
 			isTagsOpen: state.ui.reader.sidebar.isTagsOpen,
 			subscribedLists: getSubscribedLists( state ),
-			isDesktopPromoDisabled: store.get( 'desktop_promo_disabled' ),
-			isViewportMobile: viewport.isMobile(),
-			isUserLocaleEnglish: 'en' === userUtils.getLocaleSlug(),
-			isChromeOS: isChromeOS(),
-			isDesktopPromoConfiguredToRun: config.isEnabled( 'desktop-promo' ),
-			isUserDesktopAppUser: userSettings.getSetting( 'is_desktop_app_user' )
+			shouldRenderAppPromo: shouldRenderAppPromo(),
 		};
 	},
 	( dispatch ) => {
