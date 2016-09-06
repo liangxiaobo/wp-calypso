@@ -137,14 +137,23 @@ const ReaderSidebar = React.createClass( {
 		}
 	},
 
-	shouldRenderAppPromo() {
+  shouldRenderAppPromo() {
+    const {
+      isDesktopPromoDisabled,
+      isUserLocaleEnglish,
+      isViewportMobile,
+      isChromeOS,
+      isDesktopPromoConfiguredToRun,
+      isUserDesktopAppUser
+    } = this.props
+
 		return every( [
-			! this.props.isDesktopPromoDisabled,
-			this.props.isUserLocaleEnglish,
-			! this.props.isViewportMobile,
-			! this.props.isChromeOS,
-			this.props.isDesktopPromoConfiguredToRun,
-			! this.props.isUserDesktopAppUser
+			! isDesktopPromoDisabled,
+			isUserLocaleEnglish,
+			! isViewportMobile,
+			! isChromeOS,
+			isDesktopPromoConfiguredToRun,
+			! isUserDesktopAppUser
 		] );
 	},
 
