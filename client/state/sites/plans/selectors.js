@@ -61,7 +61,7 @@ export const getCurrentPlan = ( state, siteId ) => {
 export const getSitePlan = createSelector(
 	( state, siteId, productSlug ) => {
 		const plansBySiteId = getPlansBySiteId( state, siteId );
-		if ( ! plansBySiteId || plansBySiteId.isRequesting || ! plansBySiteId.data ) {
+		if ( ! plansBySiteId || ! plansBySiteId.data ) {
 			return null;
 		}
 		return plansBySiteId.data.filter( plan => plan.productSlug === productSlug ).shift();
@@ -82,13 +82,11 @@ export function getPlanDiscountedRawPrice(
 	state,
 	siteId,
 	productSlug,
-	{
-		isMonthly = false
-	} = {}
+	{ isMonthly = false } = {}
 ) {
 	const plan = getSitePlan( state, siteId, productSlug );
 
-	if ( get( plan, 'rawPrice', -1 ) < 0 || get( plan, 'rawDiscount', -1 ) <= 0 ) {
+	if ( get( plan, 'rawPrice', -1 ) < 0 || get( plan, 'rawDiscount', -1 ) < 0 ) {
 		return null;
 	}
 
@@ -111,9 +109,7 @@ export function getPlanRawDiscount(
 	state,
 	siteId,
 	productSlug,
-	{
-		isMonthly = false
-	} = {}
+	{ isMonthly = false } = {}
 ) {
 	const plan = getSitePlan( state, siteId, productSlug );
 
@@ -124,6 +120,24 @@ export function getPlanRawDiscount(
 	return isMonthly
 		? parseFloat( ( plan.rawDiscount / 12 ).toFixed( 2 ) )
 		: plan.rawDiscount;
+}
+
+/**
+ * Returns if a plan is discounted
+ *
+ * @param  {Object}  state         global state
+ * @param  {Number}  siteId        the site id
+ * @param  {String}  productSlug   the plan product slug
+ * @return {Boolean}               true if a plan has a discount
+ */
+export function isPlanDiscounted(
+	state,
+	siteId,
+	productSlug
+) {
+	const plan = getSitePlan( state, siteId, productSlug );
+
+	return ( get( plan, 'rawDiscount', -1 ) > 0 );
 }
 
 export function hasDomainCredit( state, siteId ) {

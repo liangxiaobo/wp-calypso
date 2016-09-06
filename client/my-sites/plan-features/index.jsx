@@ -16,7 +16,7 @@ import PlanFeaturesItem from './item';
 import Popover from 'components/popover';
 import PlanFeaturesActions from './actions';
 import { isCurrentPlanPaid, isCurrentSitePlan } from 'state/sites/selectors';
-import { getPlansBySiteId } from 'state/sites/plans/selectors';
+import { getPlansBySiteId, isPlanDiscounted } from 'state/sites/plans/selectors';
 import { getSelectedSiteId } from 'state/ui/selectors';
 import { getCurrentUserCurrencyCode } from 'state/current-user/selectors';
 import { getPlanDiscountedRawPrice } from 'state/sites/plans/selectors';
@@ -470,11 +470,15 @@ export default connect(
 				isPlaceholder = true;
 			}
 
+			const isDiscounted = isPlanDiscounted( state, selectedSiteId, plan );
+
 			return {
 				available: available,
 				currencyCode: getCurrentUserCurrencyCode( state ),
 				current: isCurrentSitePlan( state, selectedSiteId, planProductId ),
-				discountPrice: getPlanDiscountedRawPrice( state, selectedSiteId, plan, { isMonthly: showMonthly } ),
+				discountPrice: isDiscounted
+					? getPlanDiscountedRawPrice( state, selectedSiteId, plan, { isMonthly: showMonthly } )
+					: null,
 				features: getPlanFeaturesObject( planConstantObj.getFeatures() ),
 				onUpgradeClick: onUpgradeClick
 					? () => {

@@ -13,7 +13,8 @@ import {
 	getPlansBySite,
 	getPlansBySiteId,
 	hasDomainCredit,
-	isRequestingSitePlans
+	isRequestingSitePlans,
+	isPlanDiscounted
 } from '../selectors';
 
 describe( 'selectors', () => {
@@ -201,7 +202,7 @@ describe( 'selectors', () => {
 			const discountPrice = getPlanDiscountedRawPrice( state, 77203074, 'bronze', { isMonthly: true } );
 			expect( discountPrice ).to.equal( 8.25 );
 		} );
-		it( 'should return null, if no discount is available', () => {
+		it( 'should return raw price, if no discount is available', () => {
 			const plans = {
 				data: [ {
 					currentPlan: false,
@@ -227,8 +228,8 @@ describe( 'selectors', () => {
 					}
 				}
 			};
-			const discountPrice = getPlanDiscountedRawPrice( state, 77203074, 'silver', { isMonthly: true } );
-			expect( discountPrice ).to.equal( null );
+			const discountPrice = getPlanDiscountedRawPrice( state, 77203074, 'silver', { isMonthly: false } );
+			expect( discountPrice ).to.equal( 199 );
 		} );
 	} );
 
@@ -299,7 +300,7 @@ describe( 'selectors', () => {
 			expect( planRawDiscount ).to.equal( 8.33 );
 		} );
 
-		it( 'should return null, if no raw discount is available', () => {
+		it( 'should return rawPrice, if no raw discount is available', () => {
 			const plans = {
 				data: [ {
 					currentPlan: false,
@@ -378,6 +379,66 @@ describe( 'selectors', () => {
 			expect( isRequestingSitePlans( state, 2916284 ) ).to.equal( true );
 			expect( isRequestingSitePlans( state, 77203074 ) ).to.equal( false );
 			expect( isRequestingSitePlans( state, 'unknown' ) ).to.equal( false );
+		} );
+	} );
+	describe( '#isPlanDiscounted', () => {
+		it( 'should return false, if no discount is available', () => {
+			const plans = {
+				data: [ {
+					currentPlan: false,
+					productSlug: 'gold',
+					rawPrice: 299,
+					rawDiscount: 0
+				}, {
+					currentPlan: false,
+					productSlug: 'silver',
+					rawPrice: 199,
+					rawDiscount: 0
+				}, {
+					currentPlan: true,
+					productSlug: 'bronze',
+					rawPrice: 99,
+					rawDiscount: 100
+				} ]
+			};
+			const state = {
+				sites: {
+					plans: {
+						77203074: plans
+					}
+				}
+			};
+			const discountPrice = isPlanDiscounted( state, 77203074, 'silver' );
+			expect( discountPrice ).to.equal( false );
+		} );
+		it( 'should return true, if discount is available', () => {
+			const plans = {
+				data: [ {
+					currentPlan: false,
+					productSlug: 'gold',
+					rawPrice: 299,
+					rawDiscount: 0
+				}, {
+					currentPlan: false,
+					productSlug: 'silver',
+					rawPrice: 199,
+					rawDiscount: 0
+				}, {
+					currentPlan: true,
+					productSlug: 'bronze',
+					rawPrice: 99,
+					rawDiscount: 100
+				} ]
+			};
+			const state = {
+				sites: {
+					plans: {
+						77203074: plans
+					}
+				}
+			};
+			const discountPrice = isPlanDiscounted( state, 77203074, 'bronze' );
+			expect( discountPrice ).to.equal( true );
 		} );
 	} );
 } );
