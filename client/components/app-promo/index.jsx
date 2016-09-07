@@ -43,7 +43,7 @@ export const AppPromo = React.createClass( {
 
 	dismiss: function() {
 		this.setState( { show_promo: false } );
-		store.set( 'desktop_promo_disabled', true );
+		this.props.saveDismissal();
 	},
 
 	render: function() {
@@ -85,6 +85,9 @@ export const AppPromo = React.createClass( {
 AppPromo.defaultProps = {
 	translate: identity,
 	recordTracksEvent: noop,
+	saveDismissal: ( ) => {
+		store.set( 'desktop_promo_disabled', true );
+	}
 };
 
 const mapDispatchToProps = ( dispatch ) => {
