@@ -161,7 +161,7 @@ export class FullPostView extends React.Component {
 							: null
 						}
 
-						{ showRelatedPosts && <RelatedPostsFromOtherSites siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More in WordPress.com' ) } /> }
+						{ showRelatedPosts && <RelatedPostsFromOtherSites siteId={ post.site_ID } postId={ post.ID } title={ translate( 'More on WordPress.com' ) } /> }
 					</div>
 				</div>
 			</ReaderMain>
